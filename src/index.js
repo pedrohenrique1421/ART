@@ -5,60 +5,48 @@ const file = filePath[2];
 let words = {};
 
 const handleSnapWord = (texto) => {
-    const wordListBrute = texto.split(" ");
-    let wordList = [];
-    const wordsVerified = [];
-    if (wordListBrute.length > 0) {
-        for (let c = 0; wordListBrute.length > c; ) {
-            let partes = wordListBrute[c].split("\n"); // Divide a string em partes usando "\n" como separador
-            wordList = wordList.concat(partes); // Adiciona as partes ao novo array
-            c++;
-        }
+	const wordsTrue = [];
+	const wordList = texto
+		.toLowerCase()
+		.replace(/[.,\/#!$%\&\*;:{}\r=\-_()]/g, "")
+		.split(" ");
+	for (let i = 0; i < wordList.length; i++) {
+		const wordTrue = wordList[i].includes("\n")
+			? wordList[i].split("\n")
+			: wordList[i];
 
-        for (let d = 0; wordList.length > d; ) {
-            wordList[d] = wordList[d].replace(")", "");
-            wordList[d] = wordList[d].replace("(", "");
-            wordList[d] = wordList[d].replace(",", "");
-            wordList[d] = wordList[d].replace(".", "");
-            wordList[d] = wordList[d].replace(":", "");
-            wordList[d] = wordList[d].replace(";", "");
-            wordList[d] = wordList[d].replace("/", "");
-            wordList[d] = wordList[d].replace("?", "");
-            wordList[d] = wordList[d].replace('"', "");
-            d++;
-        }
-
-        for (let i = 0; wordList.length > i; ) {
-            const wordSelected = wordList[i];
-            let verify = false;
-
-            for (let b = 0; wordsVerified.length > b; ) {
-                if (wordSelected == wordsVerified[b]) {
-                    verify = true;
-                }
-                b++;
-            }
-
-            if (!verify) {
-                let numberOftimes = 0;
-                for (let a = 0; wordList.length > a; ) {
-                    if (wordList[a] == wordSelected) {
-                        numberOftimes++;
-                    }
-                    a++;
-                }
-                words[wordSelected] = numberOftimes;
-                wordsVerified.push(wordSelected);
-            }
-
-            i++;
-        }
-    }
+		if (typeof wordTrue == "object") {
+			for (let a = 0; a < Object.keys(wordTrue).length; a++) {
+				if (wordTrue[a] != "" || wordTrue != "\n") {
+					if (wordTrue[a].length > 0) {
+						wordsTrue.push(wordTrue[a]);
+					}
+				}
+			}
+		} else {
+			wordsTrue.push(wordTrue);
+		}
+	}
+	for (let e = 0; e < wordsTrue.length; e++) {
+		console.log(wordsTrue[e]);
+		if (wordsTrue[e] in words) {
+			words[wordsTrue[e]] = words[wordsTrue[e]] + 1;
+		} else {
+			words[wordsTrue[e]] = 1;
+		}
+	}
 };
 
 fs.readFile(file, "utf-8", (erro, dados) => {
-    handleSnapWord(dados);
-    console.log(words);
-});
+	handleSnapWord(dados);
 
+	let chavesOrdenadas = Object.keys(words).sort();
+	let objOrdenado = {};
+
+	chavesOrdenadas.forEach((chave) => {
+		objOrdenado[chave] = words[chave];
+	});
+
+	console.log(objOrdenado);
+});
 // node src/index.js caminhoDoArquivo
