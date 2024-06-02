@@ -1,52 +1,56 @@
 const fs = require("fs");
+const ErrorsManager = require("./errors/cases");
+
+class ErrorLocal extends Error {
+	constructor(message, code) {
+		super(message); // Chama o construtor da classe Error
+		this.name = this.constructor.name; // Define o nome da classe de erro
+		this.code = code; // Adiciona a propriedade code
+		Error.captureStackTrace(this, this.constructor); // Captura o stack trace corretamente
+	}
+}
 
 const filePath = process.argv;
 const file = filePath[2];
-let words = {};
 
-const handleSnapWord = (texto) => {
-	const wordsTrue = [];
-	const wordList = texto
-		.toLowerCase()
-		.replace(/[.,\/#!$%\&\*;:{}\r=\-_()]/g, "")
-		.split(" ");
-	for (let i = 0; i < wordList.length; i++) {
-		const wordTrue = wordList[i].includes("\n")
-			? wordList[i].split("\n")
-			: wordList[i];
+const ParagraphManager = (text) => {
+	const objForReturn = [];
+	const paragraphs = text.split("\n");
 
-		if (typeof wordTrue == "object") {
-			for (let a = 0; a < Object.keys(wordTrue).length; a++) {
-				if (wordTrue[a] != "" || wordTrue != "\n") {
-					if (wordTrue[a].length > 0) {
-						wordsTrue.push(wordTrue[a]);
-					}
-				}
+	paragraphs.forEach((element) => {
+		const paragraph = element.split(" ");
+		const objForAdd = {};
+		paragraph.forEach((word) => {
+			const wordReplaced = word.replace(
+				/[.,\/#!$%\^&\*;:{}=\-_`~()\r]/g,
+				""
+			);
+			if (wordReplaced.length > 2) {
+				objForAdd[wordReplaced] =
+					wordReplaced in objForAdd
+						? (objForAdd[wordReplaced] =
+								objForAdd[wordReplaced] + 1)
+						: (objForAdd[wordReplaced] = 1);
 			}
-		} else {
-			wordsTrue.push(wordTrue);
+		});
+		if (Object.keys(objForAdd).length > 1) {
+			objForReturn.push(objForAdd);
 		}
-	}
-	for (let e = 0; e < wordsTrue.length; e++) {
-		console.log(wordsTrue[e]);
-		if (wordsTrue[e] in words) {
-			words[wordsTrue[e]] = words[wordsTrue[e]] + 1;
-		} else {
-			words[wordsTrue[e]] = 1;
-		}
+	});
+
+	if (objForReturn.length > 0) {
+		console.log(objForReturn);
+	} else {
+		throw new ErrorLocal("eita", "empty");
 	}
 };
 
-fs.readFile(file, "utf-8", (erro, dados) => {
-	handleSnapWord(dados);
-
-	let chavesOrdenadas = Object.keys(words).sort();
-	let objOrdenado = {};
-
-	chavesOrdenadas.forEach((chave) => {
-		objOrdenado[chave] = words[chave];
-	});
-
-	console.log(objOrdenado);
+fs.readFile(file, "utf-8", (error, data) => {
+	try {
+		ParagraphManager(data);
+	} catch (error) {
+		ErrorsManager(error);
+	}
+	ErrorsManager(error);
 });
 // node src/index.js caminhoDoArquivo
