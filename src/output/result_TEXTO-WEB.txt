@@ -1,0 +1,12 @@
+ART - Result
+
+Estrutura:
+ Parágrafo em que está a palavra: palavra repetida: número de vezes que foi repetida, ...;
+
+Palavras repetidas no:
+
+Parágrafo 2: uma: 2;
+Parágrafo 6: dispositivos: 2, seu: 3, conectado: 2;
+Parágrafo 7: cliente: 2, uma: 2, para: 2;
+
+Obrigado por utilizar nosso sistema :)

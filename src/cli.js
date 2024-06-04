@@ -7,11 +7,12 @@ import {ParagraphManager, CreateFile} from "./index.js";
 const filePath = process.argv;
 const file = filePath[2];
 const pathForCreate = filePath[3];
+const fileName = file.split("/")
 
 fs.readFile(file, "utf-8", (error, data) => {
 	try {
 		const text = ParagraphManager(data);
-		CreateFile(text, pathForCreate);
+		CreateFile(text, pathForCreate, fileName[2]);
 	} catch (error) {
 		ErrorsManager(error);
 	}

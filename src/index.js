@@ -41,13 +41,45 @@ export const ParagraphManager = (text) => {
 	}
 };
 
-export const CreateFile = async (wordsList, path) => {
-	const pathForCreate = String(`${path}/resultado.txt`);
-	const textOfWords = JSON.stringify(wordsList);
+export const CreateFile = async (wordsList, path, fileName) => {
+	const pathForCreate = String(
+		`${path}/result_${fileName
+			.substring(0, fileName.length - 4)
+			.toUpperCase()}.txt`
+	);
+	const textOfWords = Formatter(wordsList);
 	try {
 		await fs.promises.writeFile(pathForCreate, textOfWords);
 		console.log("Arquivo criado");
 	} catch (e) {
 		throw e;
 	}
+};
+
+const Formatter = (arrayObj) => {
+	let formattedtext = `ART - Result\n------------------------\n\nEstrutura:\n Parágrafo em que está a palavra: palavra repetida: número de vezes que foi repetida, ...;\n\nPalavras repetidas no:\n\n`;
+
+	arrayObj.forEach((e, index) => {
+		let itsEmpty = true;
+		Object.entries(e).forEach((e, index) => {
+			if (parseInt(e[1]) > 1) {
+				if (itsEmpty) {
+					formattedtext += `Parágrafo ${index + 1}: `;
+					itsEmpty = false;
+				}
+				formattedtext += `${e[0]}: ${e[1]}, `;
+			}
+		});
+		if (!itsEmpty) {
+			formattedtext = formattedtext.substring(
+				0,
+				formattedtext.length - 2
+			);
+			formattedtext += `;\n`;
+		}
+	});
+
+	formattedtext +=
+		"\nObrigado por utilizar nosso sistema :)\nDesenvolvido por pption/pedrohenrique1421";
+	return formattedtext;
 };
