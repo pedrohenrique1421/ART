@@ -1,5 +1,4 @@
-const fs = require("fs");
-const ErrorsManager = require("./errors/cases");
+import fs from "fs";
 
 class ErrorLocal extends Error {
 	constructor(message, code) {
@@ -10,10 +9,7 @@ class ErrorLocal extends Error {
 	}
 }
 
-const filePath = process.argv;
-const file = filePath[2];
-
-const ParagraphManager = (text) => {
+export const ParagraphManager = (text) => {
 	const objForReturn = [];
 	const paragraphs = text.split("\n");
 
@@ -39,18 +35,19 @@ const ParagraphManager = (text) => {
 	});
 
 	if (objForReturn.length > 0) {
-		console.log(objForReturn);
+		return objForReturn;
 	} else {
-		throw new ErrorLocal("eita", "empty");
+		throw new ErrorLocal("Arquivo vazio", "EMPTY");
 	}
 };
 
-fs.readFile(file, "utf-8", (error, data) => {
+export const CreateFile = async (wordsList, path) => {
+	const pathForCreate = String(`${path}/resultado.txt`);
+	const textOfWords = JSON.stringify(wordsList);
 	try {
-		ParagraphManager(data);
-	} catch (error) {
-		ErrorsManager(error);
+		await fs.promises.writeFile(pathForCreate, textOfWords);
+		console.log("Arquivo criado");
+	} catch (e) {
+		throw e;
 	}
-	ErrorsManager(error);
-});
-// node src/index.js caminhoDoArquivo
+};

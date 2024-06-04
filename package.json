@@ -1,0 +1,13 @@
+{
+  "name": "avaliador-de-texto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/cli.js ./arquivos/texto-web.txt ./src/output"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

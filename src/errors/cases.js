@@ -1,4 +1,4 @@
-const ErrorsManager = (error) => {
+export default function ErrorsManager(error) {
 	if (error) {
 		switch (true) {
 			case error.code == "ENOENT":
@@ -6,7 +6,7 @@ const ErrorsManager = (error) => {
 					"Error na busca do arquivo, verifique o caminho do arquivo"
 				);
 				break;
-			case error.code == "empty":
+			case error.code == "EMPTY":
 				throw new Error("Arquivo vazio, verifique seu arquivo");
 				break;
 			default:
@@ -15,6 +15,4 @@ const ErrorsManager = (error) => {
 				break;
 		}
 	}
-};
-
-module.exports = ErrorsManager;
+}
