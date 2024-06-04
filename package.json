@@ -5,9 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "devWeb": "node src/cli.js ./arquivos/texto-web.txt ./src/output",
-    "devKanban": "node src/cli.js ./arquivos/texto-kanban.txt ./src/output",
-    "devAp": "node src/cli.js ./arquivos/texto-aprendizado.txt ./src/output"
+    "art-run": "node src/cli.js"
   },
   "keywords": [],
   "author": "",
